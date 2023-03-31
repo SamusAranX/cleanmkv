@@ -6,6 +6,7 @@ import argparse
 import inspect
 import json
 import sys
+from os.path import basename
 from dataclasses import dataclass
 
 @dataclass
@@ -109,6 +110,7 @@ def process_file(video, remove_streams, out_file):
 	p = subprocess.run(ffmpeg_args, stderr=sys.stderr, stdout=sys.stdout)
 
 def main(args):
+	print(basename(args.i))
 	streams = parse_file(args.i)
 
 	if args.list:
@@ -135,6 +137,11 @@ def main(args):
 		print(s)
 
 	process_file(args.i, remove_streams, args.out)
+
+	new_streams = parse_file(args.out)
+	print("Leftover streams:")
+	for s in new_streams:
+		print(s)
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="MKV audio/subtitle remover")
